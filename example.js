@@ -1,20 +1,9 @@
 const MT166 = require('./index.js')
 let dispenser = new MT166({ debug: true });
 
-// dispenser.checkIfStockIsEnding().then(() => { console.log('STOCK IS ENDING!') });
-
-// dispenser.discard().then(readAndDiscard).catch(readAndDiscard);
-// dispenser.finalPosition().then(() => { }).catch()
-
-function cont() {
-    // dispenser.discard().then(readAndDiscard).catch(readAndDiscard)
-}
-
-function readAndDiscard() {
-    // dispenser.readingPosition().then(cont).catch(cont);
-}
-
-// dispenser.finalPosition()
+dispenser.readingPosition().then(() => {
+    dispenser.finalPosition()
+})
 
 dispenser.on('discard.error', () => {
     console.log('discard bay error');

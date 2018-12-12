@@ -1,5 +1,4 @@
 const { exec } = require('child_process')
-const SerialPort = require('serialport')
 
 class MT166 {
     constructor(options) {
@@ -23,12 +22,6 @@ class MT166 {
         this.listeners = {}
         this.options = Object.assign(default_options, options)
         this.initNotifications();
-
-        if (this.options.debug === true) {
-            SerialPort.list((err, results) => {
-                console.log(results);
-            })
-        }
     }
 
     initNotifications() {
