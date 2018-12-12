@@ -1,0 +1,60 @@
+
+Wed Dec 12 13:51:49 2018
+-> Try to open serial port 6, Can not open serial port
+
+Wed Dec 12 14:05:05 2018
+-> Try to open serial port 6, Can not open serial port
+
+Wed Dec 12 14:05:28 2018
+-> Try to open serial port 2, Can not open serial port
+
+Wed Dec 12 14:05:41 2018
+-> Try to open serial port 3, Can not open serial port
+
+Wed Dec 12 14:37:12 2018
+-> Try to open serial port 3, Can not open serial port
+
+Wed Dec 12 14:37:30 2018
+-> Try to open serial port 3, Can not open serial port
+
+Wed Dec 12 14:37:32 2018
+-> Received command SEND_CARD_TO_READ from application, Sending: 0x2 0x0 0x2 0x31 0x30 0x3 0x2
+
+Wed Dec 12 14:37:33 2018
+-> Received response from MT166, 0x2 0x0 0x3 0x31 0x30 0x59 0x3
+
+Wed Dec 12 14:37:35 2018
+-> Received command DISPENSE_CARD from application, Sending: 0x2 0x0 0x2 0x31 0x31 0x3 0x3
+
+Wed Dec 12 14:37:36 2018
+-> Received response from MT166, 0x2 0x0 0x3 0x31 0x31 0x59 0x3
+
+Wed Dec 12 14:37:38 2018
+-> Received command CHECK_CARD_AT_DISPENSE_POSITION from application, Sending: 0x2 0x0 0x2 0x32 0x30 0x3 0x1
+
+Wed Dec 12 14:37:38 2018
+-> Received response from MT166, 0x2 0x0 0x3 0x32 0x30 0x40 0x3
+
+Wed Dec 12 14:37:41 2018
+-> Received command CHECK_CARD_AT_READ_POSITION from application, Sending: 0x2 0x0 0x2 0x32 0x30 0x3 0x1
+
+Wed Dec 12 14:37:41 2018
+-> Received response from MT166, 0x2 0x0 0x3 0x32 0x30 0x40 0x3
+
+Wed Dec 12 14:37:42 2018
+-> Received command CHECK_IF_BOX_IS_ALMOST_EMPTY from application, Sending: 0x2 0x0 0x2 0x32 0x30 0x3 0x1
+
+Wed Dec 12 14:37:42 2018
+-> Received response from MT166, 0x2 0x0 0x3 0x32 0x30 0x40 0x3
+
+Wed Dec 12 14:37:44 2018
+-> Received command CHECK_IF_BOX_IS_EMPTY from application, Sending: 0x2 0x0 0x2 0x32 0x30 0x3 0x1
+
+Wed Dec 12 14:37:44 2018
+-> Received response from MT166, 0x2 0x0 0x3 0x32 0x30 0x40 0x3
+
+Wed Dec 12 14:37:46 2018
+-> Received command DISCARD_CARD from application, Sending: 0x2 0x0 0x2 0x33 0x30 0x3 0x0
+
+Wed Dec 12 14:37:48 2018
+-> Received response from MT166, 0x2 0x0 0x3 0x33 0x30 0x59 0x3

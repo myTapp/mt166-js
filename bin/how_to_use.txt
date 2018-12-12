@@ -1,0 +1,16 @@
+1-> send_to_read_position
+
+2-> send_to_dispense_position
+        
+3-> check_card_at_dispense_position
+
+4-> check_card_at_read_position
+   
+5-> check_if_box_is_pre_empty
+   
+6-> check_if_box_is_empty
+   
+7-> discard_card
+
+
+All commands will return 1 -> TRUE or 0 -> FALSE

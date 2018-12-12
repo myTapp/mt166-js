@@ -1,0 +1,28 @@
+{
+  "name": "mt166-js",
+  "version": "1.0.0",
+  "description": "Node.js API to comunicate with Mingtetech MT166 RFID card collector and dispenser",
+  "main": "index.js",
+  "dependencies": {
+    "serialport": "^7.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myTapp/mt166-js.git"
+  },
+  "keywords": [
+    "mt166",
+    "dispenser",
+    "rfid"
+  ],
+  "author": "myTapp",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/myTapp/mt166-js/issues"
+  },
+  "homepage": "https://github.com/myTapp/mt166-js#readme"
+}
