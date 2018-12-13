@@ -8,10 +8,10 @@ dispenser.readingPosition().then(() => {
 dispenser.on('discard.error', () => {
     console.log('discard bay error');
     dispenser.finalPositionIsOccupied().then(() => {
-        console.log('there\'s a card occuping the final position, discard bay full');
+        console.log('there\'s a card occupying the final position, discard bay full');
     }).catch(() => {
         dispenser.readingPositionIsOccupied().then(() => {
-            console.log('there\'s a card occuping the reading position, discard bay full');
+            console.log('there\'s a card occupying the reading position, discard bay full');
         }).catch(() => {
             console.log('there\'s no card')
         })
