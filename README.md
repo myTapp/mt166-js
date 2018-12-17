@@ -10,7 +10,7 @@ Original C code by [@eldertramontin](https://github.com/eldertramontin)
 npm install mt166-js
 ```
 ```
-const MT166 = require('./index.js')
+const MT166 = require('mt166-js')
 let dispenser = new MT166();
 ```
 
