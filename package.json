@@ -1,6 +1,6 @@
 {
   "name": "mt166-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Node.js API to comunicate with Mingtetech MT166 RFID card collector and dispenser",
   "main": "index.js",
   "dependencies": {

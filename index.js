@@ -1,10 +1,11 @@
 const { exec } = require('child_process')
+const path = require('path')
 
 class MT166 {
     constructor(options) {
         let default_options = {
             port: 2,
-            path: '"./bin/MT166.exe"'
+            path: './bin/MT166.exe'
         }
 
         this.OP_CODES = {
@@ -21,6 +22,7 @@ class MT166 {
 
         this.listeners = {}
         this.options = Object.assign(default_options, options)
+        this.options.path = `"${path.resolve(__dirname, this.options.path)}"`
         this.initNotifications();
     }
 
@@ -47,7 +49,7 @@ class MT166 {
     }
 
     on(code, cb) {
-        if(cb) {
+        if (cb) {
             this.listeners[code] = cb;
         }
     }
@@ -107,7 +109,7 @@ class MT166 {
                 if (+stdout === 0) {
                     this.notify(code)
                 }
-                if(code === this.OP_CODES.READING_POSITION || code === this.OP_CODES.FINAL_POSITION) {
+                if (code === this.OP_CODES.READING_POSITION || code === this.OP_CODES.FINAL_POSITION) {
                     this.checkStock(() => {
                         this.handleReturn(e, stdout, stderr, resolve, reject)
                     });
