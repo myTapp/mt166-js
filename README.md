@@ -13,11 +13,9 @@ npm install mt166-js
 const MT166 = require('mt166-js')
 let dispenser = new MT166();
 ```
-- with options
-
+- with options:
 ```
-const MT166 = require('mt166-js')
-let dispenser = new MT166({ port: 3, debug: true}); // COM3
+let dispenser = new MT166({ port: 3, debug: true }); // COM3
 ```
 
 ## examples
