@@ -15,7 +15,7 @@ let dispenser = new MT166();
 ```
 - with options:
 ```
-let dispenser = new MT166({ port: 3, debug: true }); // COM3
+let dispenser = new MT166({ port: 3, debug: true }); // COM4
 ```
 
 ## examples
