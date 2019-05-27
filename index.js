@@ -18,6 +18,7 @@ class MT166 {
             DISCARD: '7',
             IS_EMPTY: '100',
             IS_ENDING: '101',
+            IS_UNAVALIABLE: '-1'
         }
 
         this.listeners = {}
@@ -29,6 +30,9 @@ class MT166 {
     initNotifications() {
         this.notifications = {};
 
+        this.notifications[this.OP_CODES.IS_UNAVALIABLE] = () => {
+            this.emit('service.unavaliable');
+        }
         this.notifications[this.OP_CODES.DISCARD] = () => {
             this.emit('discard.error');
         }
@@ -94,20 +98,27 @@ class MT166 {
         return this.execute(this.OP_CODES.DISCARD);
     }
 
-    notify(code) {
+    notify(code) {        
         if (this.notifications[code]) {
-            try {
+            try {                
                 this.notifications[code]();
             }
-            catch (err) { }
+            catch (err) {
+                console.error(error);
+            }
         }
     }
 
     execute(code) {
-        return new Promise((resolve, reject) => {
-            exec(this.createCommand(code), (e, stdout, stderr) => {
-                if (+stdout === 0) {
+        return new Promise((resolve, reject) => {            
+            exec(this.createCommand(code), (e, stdout, stderr) => {                
+                const returnCode = +stdout;
+                if (returnCode === 0) {
                     this.notify(code)
+                }
+                if (returnCode === -1) {
+                    this.notify(-1)
+                    return this.handleReturn(e, '-1', stderr, resolve, reject)
                 }
                 if (code === this.OP_CODES.READING_POSITION || code === this.OP_CODES.FINAL_POSITION) {
                     this.checkStock(() => {
@@ -130,14 +141,16 @@ class MT166 {
         if (this.options.debug === true) { console.log(stdout) }
         if (e instanceof Error) {
             console.error(e)
-            reject(e)
-        }
+            return reject(e)
+        }        
         if (+stdout === 1) {
-            resolve()
+            return resolve()
         }
-
         if (+stdout === 0) {
-            reject()
+            return reject()
+        }
+        if (+stdout === -1) {
+            return reject(-1)
         }
     }
 }

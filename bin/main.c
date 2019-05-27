@@ -40,14 +40,22 @@ uint8_t open_port()
     return 1;
 }
 
+// Code 1: Success
 void print_success()
 {
     printf("1\n");  
 }
 
+// Code 0: Fail
 void print_failure()
 {
     printf("0\n");  
+}
+
+// Code -1: Unable to connect
+void print_unavaliable()
+{
+    printf("-1\n");  
 }
 
 void send_to_read_position()
@@ -80,6 +88,8 @@ void send_to_read_position()
     else
     {
         log_action("No response from MT166", "--");
+        print_unavaliable();
+        return;
     }
 
     if(buffer[5] == RETURN_OPERATION_SUCCEED)
@@ -122,6 +132,8 @@ void send_to_dispense_position()
     else
     {
         log_action("No response from MT166", "--");
+        print_unavaliable();
+        return;
     }
 
     if(buffer[5] == RETURN_OPERATION_SUCCEED)
@@ -164,6 +176,8 @@ void check_card_at_dispense_position()
     else
     {
         log_action("No response from MT166", "--");
+        print_unavaliable();
+        return;
     }
 
     if(buffer[5] & DISPENSER_STATUS_CARD_AT_DISPENSE)
@@ -206,6 +220,8 @@ void check_card_at_read_position()
     else
     {
         log_action("No response from MT166", "--");
+        print_unavaliable();
+        return;
     }
 
     if(buffer[5] & DISPENSER_STATUS_CARD_AT_READ)
@@ -248,6 +264,8 @@ void check_if_box_is_pre_empty()
     else
     {
         log_action("No response from MT166", "--");
+        print_unavaliable();
+        return;
     }
 
     if(buffer[5] & DISPENSER_STATUS_CARD_SHORTAGE)
@@ -290,15 +308,17 @@ void check_if_box_is_empty()
     else
     {
         log_action("No response from MT166", "--");
+        print_unavaliable();
+        return;
     }
 
     if(buffer[5] & DISPENSER_STATUS_BOX_EMPTY)
     {
-        printf("1\n");    
+        print_success();  
     }
     else
     {
-        printf("0\n");    
+        print_failure();  
     }
 }
 
@@ -332,6 +352,8 @@ void discard_card()
     else
     {
         log_action("No response from MT166", "--");
+        print_unavaliable();
+        return;
     }
 
     if(buffer[5] == RETURN_OPERATION_SUCCEED)
