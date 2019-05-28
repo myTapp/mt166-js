@@ -366,6 +366,41 @@ void discard_card()
     }
 }
 
+void get_dispenser_version()
+{
+    uint8_t data[10];
+    char buffer[10];
+    buffer[5] = 0;
+    char str1[60], str2[50];
+
+    int length, answer, i;
+    
+    length = pack(data, 2, CMD_DISPENSER_CHECK_SOFTWARE_VERSION); // send to recycle
+    RS232_SendBuf(SERIAL_PORT, data, length);   
+    sprintf(str1, "Received command CHECK_VERSION from application");
+    sprintf(str2, "Sending: 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x", data[0],data[1],data[2],data[3],data[4],data[5],data[6]);
+    log_action(str1, str2);
+        
+    #ifdef _WIN32
+    Sleep(2000);    /* sleep for 1000 milliSeconds */
+#else
+    usleep(2000000);  
+#endif
+    answer = RS232_PollComport(SERIAL_PORT, buffer, 10);
+    
+    if(answer > 0 && buffer[0] != RETURN_NAK)
+    {
+        sprintf(str2, "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x", buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6]);
+        log_action("Received response from MT166", str2);
+        print_success();
+    }
+    else
+    {
+        log_action("No response from MT166", "--");
+        print_unavaliable();
+    }
+}
+
 void menu(int command)
 {
     switch(command)
@@ -383,6 +418,8 @@ void menu(int command)
         case 6: check_if_box_is_empty();
         break;
         case 7: discard_card();
+        break;
+        case 8: get_dispenser_version();
         break;
 
         default: printf("Invalid parameter \n");           
