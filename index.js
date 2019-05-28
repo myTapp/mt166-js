@@ -25,7 +25,43 @@ class MT166 {
         this.listeners = {}
         this.options = Object.assign(default_options, options)
         this.options.path = `"${path.resolve(__dirname, this.options.path)}"`
-        this.initNotifications();
+        this.initNotifications()
+
+        if (options.autoDiscovery) {
+            this.discoverComPorts()
+        }
+    }
+
+    async discoverComPorts() {
+        let testCode,
+            defaultPortWorking;
+        try {
+            testCode = await this.execute(this.OP_CODES.PING, true)
+            defaultPortWorking = testCode !== -1
+        } catch (e) {
+            defaultPortWorking = e !== -1
+        }
+        if (defaultPortWorking) {
+            return;
+        }
+        this.options.debug && console.warn(`Default port isnt responding.`)
+        for (let i=0; i<12; i++) {
+            console.log(`Trying to connect in port #${i}...`)
+            this.options.port = i
+            let connected
+            try {
+                const portResponse = await this.execute(this.OP_CODES.PING, true)
+                connected = portResponse !== -1
+            } catch (e) {
+                connected = e !== -1
+            }
+            if (connected) {
+                console.log(`Port #${i} is responding! Using that.`)           
+                return;
+            }
+            console.log(`Port #${i} does not responds.`)
+        }
+        this.notify(-1)
     }
 
     initNotifications() {
@@ -117,15 +153,17 @@ class MT166 {
         }
     }
 
-    execute(code) {
+    execute(code, local=false) {
         return new Promise((resolve, reject) => {            
             exec(this.createCommand(code), (e, stdout, stderr) => {                
                 const returnCode = +stdout;
-                if (returnCode === 0) {
+                if (returnCode === 0 && (! local)) {
                     this.notify(code)
                 }
                 if (returnCode === -1) {
-                    this.notify(-1)
+                    if (! local) {
+                        this.notify(-1)
+                    }
                     return this.handleReturn(e, '-1', stderr, resolve, reject)
                 }
                 if (code === this.OP_CODES.READING_POSITION || code === this.OP_CODES.FINAL_POSITION) {
