@@ -16,6 +16,7 @@ class MT166 {
             CHECK_STOCK_ENDING: '5',
             CHECK_STOCK_EMPTY: '6',
             DISCARD: '7',
+            PING: '8',
             IS_EMPTY: '100',
             IS_ENDING: '101',
             IS_UNAVALIABLE: '-1'
@@ -41,6 +42,9 @@ class MT166 {
         }
         this.notifications[this.OP_CODES.IS_ENDING] = () => {
             this.emit('stock.ending');
+        }
+        this.notifications[this.OP_CODES.PING] = () => {
+            this.emit('service.version');
         }
     }
 
@@ -92,6 +96,10 @@ class MT166 {
 
     checkIfStockIsEmpty() {
         return this.execute(this.OP_CODES.CHECK_STOCK_EMPTY);
+    }
+
+    ping() {
+        return this.execute(this.OP_CODES.PING);
     }
 
     discard() {
