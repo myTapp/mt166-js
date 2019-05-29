@@ -49,7 +49,7 @@ dispenser.on('service.avaliable', () => { console.log('The Dispenser is avaliabl
 
 ## Port discovery
 
-Using the ```autoDiscovery``` option the dispenser instance will search all avaliable COM port automatically until it finds a valid connection.
+Using the ```autoDiscovery``` option the dispenser instance will search all avaliable COM ports automatically until it finds a valid connection.
 ```
 let dispenser = new MT166({ port: 3, debug: true, autoDiscovery: true });
 ```
