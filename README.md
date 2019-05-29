@@ -5,7 +5,7 @@ Node.js API to comunicate with Mingtetech MT166 RFID card collector and dispense
 
 Original C code by [@eldertramontin](https://github.com/eldertramontin)
 
-## quick-start
+## Quick-start
 ```
 npm install mt166-js
 ```
@@ -18,7 +18,7 @@ let dispenser = new MT166();
 let dispenser = new MT166({ port: 3, debug: true }); // COM4
 ```
 
-## examples
+## Examples
 ```
 dispenser.readingPosition().then(() => {
     dispenser.finalPosition()
@@ -39,8 +39,19 @@ dispenser.on('discard.error', () => {
 })
 ```
 
-## listeners
+## Listeners
 ```
 dispenser.on('stock.ending', () => { console.log('stock bay is ending'); })
 dispenser.on('stock.empty', () => { console.log('stock bay is empty'); })
+dispenser.on('service.unavaliable', () => { console.log('The Dispenser is unavaliable'); })
+dispenser.on('service.avaliable', () => { console.log('The Dispenser is avaliable now!'); })
 ```
+
+## Port discovery
+
+Using the ```autoDiscovery``` option the dispenser instance will search all avaliable COM port automatically until it finds a valid connection.
+```
+let dispenser = new MT166({ port: 3, debug: true, autoDiscovery: true });
+```
+This instance will try to connect in the port 3, if the port isn't avaliable it will start the automatic search.
+
