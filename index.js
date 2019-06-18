@@ -39,7 +39,9 @@ class MT166 {
             console.warn(`Default port #${this.options.port} isnt responding.`)
         }
         for (let i=0; i<12; i++) {
-            console.log(`Trying to connect in port #${i}...`)
+            if (this.options.debug) {
+                console.log(`Trying to connect in port #${i}...`)
+            }
             this.options.port = i
             let connected
             try {
@@ -49,11 +51,15 @@ class MT166 {
                 connected = e !== -1
             }
             if (connected) {
-                console.log(`Port #${i} is responding! Using that.`)         
+                if (this.options.debug) {
+                    console.log(`Port #${i} is responding! Using that.`)         
+                }
                 this.notify(this.OP_CODES.IS_AVALIABLE)  
                 return this.connected = true
             }
-            console.log(`Port #${i} does not responds.`)
+            if (this.options.debug) {
+                console.log(`Port #${i} does not responds.`)
+            }
         }
         this.notify(-1)
         return this.connected = false
