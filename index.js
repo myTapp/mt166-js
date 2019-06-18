@@ -34,14 +34,18 @@ class MT166 {
         }
     }
 
+    log(msg, error=false) {
+        if (this.options.debug) {
+            error ? console.error(msg) : console.log(msg);
+        }
+    }
+
     async discoverComPorts() {        
         if (this.options.debug) {
             console.warn(`Default port #${this.options.port} isnt responding.`)
         }
         for (let i=0; i<12; i++) {
-            if (this.options.debug) {
-                console.log(`Trying to connect in port #${i}...`)
-            }
+            this.log(`Trying to connect in port #${i}...`)
             this.options.port = i
             let connected
             try {
@@ -51,15 +55,11 @@ class MT166 {
                 connected = e !== -1
             }
             if (connected) {
-                if (this.options.debug) {
-                    console.log(`Port #${i} is responding! Using that.`)         
-                }
+                this.log(`Port #${i} is responding! Using that.`)
                 this.notify(this.OP_CODES.IS_AVALIABLE)  
                 return this.connected = true
             }
-            if (this.options.debug) {
-                console.log(`Port #${i} does not responds.`)
-            }
+            this.log(`Port #${i} does not responds.`);
         }
         this.notify(-1)
         return this.connected = false
@@ -188,9 +188,7 @@ class MT166 {
                 return reject(this.OP_CODES.IS_UNAVALIABLE)
             }
             const command = this.createCommand(code)
-            if (this.options.debug)            {
-                console.log(`Executing: ${command}`)
-            }
+            this.log(`Executing: ${command}`)
             exec(command, (e, stdout, stderr) => {                
                 const returnCode = +stdout;
                 if (returnCode === 0 && (! local)) {
@@ -220,11 +218,9 @@ class MT166 {
 
     handleReturn(e, stdout, stderr, resolve, reject, command) {
         stdout = stdout.trim()
-        if (this.options.debug === true) { 
-            console.log(`${command}: ${stdout}`) 
-        }
-        if (e instanceof Error) {
-            console.error(e)
+        this.log(`${command}: ${stdout}`) 
+        if (e instanceof Error) {            
+            this.log(e, true);
             return reject(e)
         }        
         if (+stdout === 1) {
