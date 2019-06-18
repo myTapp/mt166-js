@@ -49,9 +49,9 @@ dispenser.on('service.avaliable', () => { console.log('The Dispenser is avaliabl
 
 ## Port discovery
 
-Using the ```autoDiscovery``` option, the dispense instance will search for the dispenser in all avaliable com port.
+Using the ```autoDiscovery``` option the dispenser instance will search all avaliable COM port automatically until it finds a valid connection.
 ```
 let dispenser = new MT166({ port: 3, debug: true, autoDiscovery: true });
 ```
-The object above will try to connect in the port 3, if that port wont be avaliable, it will search for some port avaliable.
+This instance will try to connect in the port 3, if the port isn't avaliable it will start the automatic search.
 
