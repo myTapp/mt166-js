@@ -49,7 +49,7 @@ dispenser.on('service.avaliable', () => { console.log('The Dispenser is avaliabl
 
 ## Port discovery
 
-Using the ```autoDiscovery``` option the dispenser instance will search all available COM ports automatically until it finds a valid connection.
+The ```autoDiscovery``` option will make the instance search all available COM ports automatically until it finds a valid connection.
 ```
 // This instance will try to connect to the COM4 port
 // If the port isn't available it will start the automatic search
