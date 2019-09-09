@@ -28,6 +28,7 @@ class MT166 {
         this.options = Object.assign(default_options, options)
         this.options.path = `"${path.resolve(__dirname, this.options.path)}"`
         this.queue = []
+        this.checkStock = this.checkStock.bind(this)
         this.initNotifications()
 
         if (options.autoDiscovery) {
@@ -183,12 +184,44 @@ class MT166 {
         }
     }
 
-    execute(code, local = false) {
+    execute(code, local = false, promise) {
         if (!this.onExecution) {
             this.onExecution = true;
-            return new Promise((resolve, reject) => {
+            if(!promise) {
+                return new Promise((resolve, reject) => {
+                    if (!(this.connected || local)) {
+                        return reject(this.OP_CODES.IS_UNAVALIABLE)
+                    }
+                    const command = this.createCommand(code)
+                    this.log(`Executing: ${command}`)
+                    exec(command, (e, stdout, stderr) => {
+                        this.onExecution = false;
+                        const returnCode = +stdout;
+                        if (returnCode === 0 && (!local)) {
+                            this.notify(code)
+                        }
+                        if (returnCode === -1) {
+                            if (!local) {
+                                this.notify(-1)
+                            }
+                            return this.handleReturn(e, '-1', stderr, resolve, reject, command)
+                        }
+                        if (code === this.OP_CODES.READING_POSITION || code === this.OP_CODES.FINAL_POSITION) {
+                            this.checkStock(() => {
+                                this.handleReturn(e, stdout, stderr, resolve, reject, command)
+                            });
+                        }
+                        else {
+                            this.handleReturn(e, stdout, stderr, resolve, reject, command)
+                        }
+    
+                        this.checkQueue();
+                    })
+                })
+            }
+            else {
                 if (!(this.connected || local)) {
-                    return reject(this.OP_CODES.IS_UNAVALIABLE)
+                    return promise.reject(this.OP_CODES.IS_UNAVALIABLE)
                 }
                 const command = this.createCommand(code)
                 this.log(`Executing: ${command}`)
@@ -202,20 +235,20 @@ class MT166 {
                         if (!local) {
                             this.notify(-1)
                         }
-                        return this.handleReturn(e, '-1', stderr, resolve, reject, command)
+                        return this.handleReturn(e, '-1', stderr, promise.resolve, promise.reject, command)
                     }
                     if (code === this.OP_CODES.READING_POSITION || code === this.OP_CODES.FINAL_POSITION) {
                         this.checkStock(() => {
-                            this.handleReturn(e, stdout, stderr, resolve, reject, command)
+                            this.handleReturn(e, stdout, stderr, promise.resolve, promise.reject, command)
                         });
                     }
                     else {
-                        this.handleReturn(e, stdout, stderr, resolve, reject, command)
+                        this.handleReturn(e, stdout, stderr, promise.resolve, promise.reject, command)
                     }
 
                     this.checkQueue();
                 })
-            })
+            }
         }
         else {
             this.pushToQueue(code, local);
@@ -223,14 +256,25 @@ class MT166 {
     }
 
     pushToQueue(code, local) {
-        this.queue.push([code, local]);
+        var res, rej;
+
+        var promise = new Promise((resolve, reject) => {
+            res = resolve;
+            rej = reject;
+        });
+
+        promise.resolve = res;
+        promise.reject = rej;
+
+        this.queue.push([code, local, promise]);
+        return promise;
     }
 
     checkQueue() {
         if (this.queue.length > 0) {
             let next = this.queue.shift();
             try {
-                this.execute(next[0], next[1]);
+                this.execute(next[0], next[1], next[2]);
             } catch (err) { console.error(err); }
         }
     }
