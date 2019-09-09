@@ -27,6 +27,7 @@ class MT166 {
         this.listeners = {}
         this.options = Object.assign(default_options, options)
         this.options.path = `"${path.resolve(__dirname, this.options.path)}"`
+        this.queue = []
         this.initNotifications()
 
         if (options.autoDiscovery) {
@@ -34,17 +35,17 @@ class MT166 {
         }
     }
 
-    log(msg, error=false) {
+    log(msg, error = false) {
         if (this.options.debug) {
             error ? console.error(msg) : console.log(msg);
         }
     }
 
-    async discoverComPorts() {        
+    async discoverComPorts() {
         if (this.options.debug) {
             console.warn(`Default port #${this.options.port} isnt responding.`)
         }
-        for (let i=0; i<12; i++) {
+        for (let i = 0; i < 12; i++) {
             this.log(`Trying to connect in port #${i}...`)
             this.options.port = i
             let connected
@@ -55,8 +56,8 @@ class MT166 {
                 connected = e !== -1
             }
             if (connected) {
-                this.log(`Port #${i} is responding! Using that.`)
-                this.notify(this.OP_CODES.IS_AVALIABLE)  
+                this.log(`Port #${i} is responding!Using that.`)
+                this.notify(this.OP_CODES.IS_AVALIABLE)
                 return this.connected = true
             }
             this.log(`Port #${i} does not responds.`);
@@ -76,10 +77,10 @@ class MT166 {
             this.connected = true
         }
         this.notifications[this.OP_CODES.IS_UNAVALIABLE] = () => {
-            if (! this.connected) {
+            if (!this.connected) {
                 return;
             }
-            this.emit('service.unavaliable')            
+            this.emit('service.unavaliable')
             this.connected = false
             if (this.options.autoDiscovery) {
                 if (this.discoverIntervalId) {
@@ -88,7 +89,7 @@ class MT166 {
                 const intervalTimeout = () => {
                     this.discoverIntervalId = setTimeout(async () => {
                         const connected = await this.discoverComPorts()
-                        if (connected) {                        
+                        if (connected) {
                             clearInterval(this.discoverIntervalId)
                             this.discoverIntervalId = null
                             return;
@@ -171,9 +172,9 @@ class MT166 {
         return this.execute(this.OP_CODES.DISCARD);
     }
 
-    notify(code) {        
+    notify(code) {
         if (this.notifications[code]) {
-            try {                
+            try {
                 this.notifications[code]();
             }
             catch (err) {
@@ -182,34 +183,56 @@ class MT166 {
         }
     }
 
-    execute(code, local=false) {
-        return new Promise((resolve, reject) => { 
-            if (! (this.connected || local)) {
-                return reject(this.OP_CODES.IS_UNAVALIABLE)
-            }
-            const command = this.createCommand(code)
-            this.log(`Executing: ${command}`)
-            exec(command, (e, stdout, stderr) => {                
-                const returnCode = +stdout;
-                if (returnCode === 0 && (! local)) {
-                    this.notify(code)
+    execute(code, local = false) {
+        if (!this.onExecution) {
+            this.onExecution = true;
+            return new Promise((resolve, reject) => {
+                if (!(this.connected || local)) {
+                    return reject(this.OP_CODES.IS_UNAVALIABLE)
                 }
-                if (returnCode === -1) {
-                    if (! local) {
-                        this.notify(-1)
+                const command = this.createCommand(code)
+                this.log(`Executing: ${command}`)
+                exec(command, (e, stdout, stderr) => {
+                    this.onExecution = false;
+                    const returnCode = +stdout;
+                    if (returnCode === 0 && (!local)) {
+                        this.notify(code)
                     }
-                    return this.handleReturn(e, '-1', stderr, resolve, reject, command)
-                }
-                if (code === this.OP_CODES.READING_POSITION || code === this.OP_CODES.FINAL_POSITION) {
-                    this.checkStock(() => {
+                    if (returnCode === -1) {
+                        if (!local) {
+                            this.notify(-1)
+                        }
+                        return this.handleReturn(e, '-1', stderr, resolve, reject, command)
+                    }
+                    if (code === this.OP_CODES.READING_POSITION || code === this.OP_CODES.FINAL_POSITION) {
+                        this.checkStock(() => {
+                            this.handleReturn(e, stdout, stderr, resolve, reject, command)
+                        });
+                    }
+                    else {
                         this.handleReturn(e, stdout, stderr, resolve, reject, command)
-                    });
-                }
-                else {
-                    this.handleReturn(e, stdout, stderr, resolve, reject, command)
-                }
+                    }
+
+                    this.checkQueue();
+                })
             })
-        })
+        }
+        else {
+            this.pushToQueue(code, local);
+        }
+    }
+
+    pushToQueue(code, local) {
+        this.queue.push([code, local]);
+    }
+
+    checkQueue() {
+        if (this.queue.length > 0) {
+            let next = this.queue.shift();
+            try {
+                this.execute(next[0], next[1]);
+            } catch (err) { console.error(err); }
+        }
     }
 
     createCommand(cmd) {
@@ -218,11 +241,11 @@ class MT166 {
 
     handleReturn(e, stdout, stderr, resolve, reject, command) {
         stdout = stdout.trim()
-        this.log(`${command}: ${stdout}`) 
-        if (e instanceof Error) {            
+        this.log(`${command}: ${stdout}`)
+        if (e instanceof Error) {
             this.log(e, true);
             return reject(e)
-        }        
+        }
         if (+stdout === 1) {
             return resolve()
         }
