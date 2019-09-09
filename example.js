@@ -1,9 +1,15 @@
 const MT166 = require('./index.js')
-let dispenser = new MT166({ debug: true });
+let dispenser = new MT166({ debug: true, port: 6 });
 
-dispenser.readingPosition().then(() => {
-    dispenser.finalPosition()
-})
+function check() {
+    setTimeout(() => {
+        dispenser.readingPositionIsOccupied().then(() => {
+            dispenser.finalPosition().then(check).catch(check);
+        }).catch(check)
+    }, 2e3);
+}
+
+check();
 
 dispenser.on('discard.error', () => {
     console.log('discard bay error');
