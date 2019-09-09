@@ -251,7 +251,7 @@ class MT166 {
             }
         }
         else {
-            this.pushToQueue(code, local);
+            return this.pushToQueue(code, local);
         }
     }
 
