@@ -61,11 +61,11 @@ void print_unavaliable()
 void send_to_read_position()
 {
     uint8_t data[10];
-    char buffer[10];
+    unsigned char buffer[10];
     buffer[5] = 0;
     char str1[60], str2[50];
 
-    int length, answer, i;
+    int length, answer;
     
     length = pack(data, 2, CMD_DISPENSER_SEND_CARD_TO_READ_POSITION); // send to pos 1
     RS232_SendBuf(SERIAL_PORT, data, length);   
@@ -105,11 +105,11 @@ void send_to_read_position()
 void send_to_dispense_position()
 {
     uint8_t data[10];
-    char buffer[10];
+    unsigned char buffer[10];
     buffer[5] = 0;
     char str1[60], str2[50];
 
-    int length, answer, i;
+    int length, answer;
     
     length = pack(data, 2, CMD_DISPENSER_SEND_CARD_TO_DISPENSE_POSITION); // send to pos 2
     RS232_SendBuf(SERIAL_PORT, data, length);   
@@ -149,11 +149,11 @@ void send_to_dispense_position()
 void check_card_at_dispense_position()
 {
     uint8_t data[10];
-    char buffer[10];
+    unsigned char buffer[10];
     buffer[5] = 0;
     char str1[70], str2[50];
 
-    int length, answer, i;
+    int length, answer;
     
     length = pack(data, 2, CMD_DISPENSER_CHECK_STATUS); 
     RS232_SendBuf(SERIAL_PORT, data, length);
@@ -193,11 +193,11 @@ void check_card_at_dispense_position()
 void check_card_at_read_position()
 {
     uint8_t data[10];
-    char buffer[10];
+    unsigned char buffer[10];
     buffer[5] = 0;
     char str1[70], str2[50];
 
-    int length, answer, i;
+    int length, answer;
     
     length = pack(data, 2, CMD_DISPENSER_CHECK_STATUS); 
     RS232_SendBuf(SERIAL_PORT, data, length);
@@ -237,11 +237,11 @@ void check_card_at_read_position()
 void check_if_box_is_pre_empty()
 {
     uint8_t data[10];
-    char buffer[10];
+    unsigned char buffer[10];
     buffer[5] = 0;
     char str1[70], str2[50];
 
-    int length, answer, i;
+    int length, answer;
     
     length = pack(data, 2, CMD_DISPENSER_CHECK_STATUS); 
     RS232_SendBuf(SERIAL_PORT, data, length);
@@ -281,11 +281,11 @@ void check_if_box_is_pre_empty()
 void check_if_box_is_empty()
 {
     uint8_t data[10];
-    char buffer[10];
+    unsigned char buffer[10];
     buffer[5] = 0;
     char str1[70], str2[50];
 
-    int length, answer, i;
+    int length, answer;
     
     length = pack(data, 2, CMD_DISPENSER_CHECK_STATUS); 
     RS232_SendBuf(SERIAL_PORT, data, length);
@@ -325,11 +325,11 @@ void check_if_box_is_empty()
 void discard_card()
 {
     uint8_t data[10];
-    char buffer[10];
+    unsigned char buffer[10];
     buffer[5] = 0;
     char str1[60], str2[50];
 
-    int length, answer, i;
+    int length, answer;
     
     length = pack(data, 2, CMD_DISPENSER_ACCEPT_CARD_TO_RECYCLE); // send to recycle
     RS232_SendBuf(SERIAL_PORT, data, length);   
@@ -369,11 +369,11 @@ void discard_card()
 void get_dispenser_version()
 {
     uint8_t data[10];
-    char buffer[10];
+    unsigned char buffer[10];
     buffer[5] = 0;
     char str1[60], str2[50];
 
-    int length, answer, i;
+    int length, answer;
     
     length = pack(data, 2, CMD_DISPENSER_CHECK_SOFTWARE_VERSION); // send to recycle
     RS232_SendBuf(SERIAL_PORT, data, length);   

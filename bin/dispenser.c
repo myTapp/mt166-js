@@ -1,43 +1,23 @@
 #include "dispenser.h"
+#include <stdio.h>
 
 int pack(uint8_t *data, int length, uint8_t command, uint8_t parameter)
-{
-    int position = 0;
-    
-    data[position++] = STX;
-    data[position++] = (length>>8 & 0xFF);
-    data[position++] = (length & 0xFF);
-    data[position++] = command;
-    data[position++] = parameter;
-    data[position++] = ETX;
-    data[position++] = calc_bcc(data, position);
+{   
+    data[0] = STX;
+    data[1] = (length>>8 & 0xFF);
+    data[2] = (length & 0xFF);
+    data[3] = command;
+    data[4] = parameter;
+    data[5] = ETX;
+    data[6] = calc_bcc(data, 6);
 
-    return position;
+    return 7;
 }
 
 int unpack(uint8_t *data, int frame_length)
 {
     int position = 1;
-
-//    if(data[0] == STX && data[frame_length-2] == ETX)         /* Start byte and end byte are OK */
-//    {
-//        if(data[frame_length-1] == calc_bcc(data, frame_length-1))  /* BCC byte are OK                */
-/*        {
-            length = data[position++]<<8;
-            length += data[position++];
-            command = data[position++];
-            parameter = data[position++];
-            response = data[position++];
-            if(response == RETURN_OPERATION_SUCCEED)
-            {
-
-            }
-            if(response == RETURN_OPERATION_FAILED)
-            {
-
-            }
-        }
-    } */
+    return position;
 }
 
 uint8_t calc_bcc(uint8_t *buffer, int length)
