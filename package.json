@@ -6,6 +6,8 @@
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
+    "build:linux" : "sh ./bin/build.sh",
+    "build:win" : "compile.bat",    
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
