@@ -1,14 +1,13 @@
 {
   "name": "mt166-js",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "Node.js API to comunicate with Mingtetech MT166 RFID card collector and dispenser",
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
     "build:linux" : "sh ./bin/build.sh",
-    "build:win" : "compile.bat",    
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:win" : "bin\\compile.bat"
   },
   "repository": {
     "type": "git",

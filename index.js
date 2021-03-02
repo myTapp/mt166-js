@@ -6,7 +6,7 @@ class MT166 {
     constructor(options) {
         let default_options = {
             port: 2,
-            path: (os.type() === 'Linux')? './bin/MT166': (os.type() === 'Windows_NT')? './bin/MT166.exe':'./bin/MT166.exe',
+            path: (os.type().toLowerCase().split('linux').length > 1) ? './bin/MT166' : './bin/MT166.exe',
         }
 
         this.OP_CODES = {
@@ -188,7 +188,7 @@ class MT166 {
     execute(code, local = false, promise) {
         if (!this.onExecution) {
             this.onExecution = true;
-            if(!promise) {
+            if (!promise) {
                 return new Promise((resolve, reject) => {
                     if (!(this.connected || local)) {
                         return reject(this.OP_CODES.IS_UNAVALIABLE)
@@ -215,7 +215,7 @@ class MT166 {
                         else {
                             this.handleReturn(e, stdout, stderr, resolve, reject, command)
                         }
-    
+
                         this.checkQueue();
                     })
                 })
