@@ -1,11 +1,12 @@
 const { exec } = require('child_process')
 const path = require('path')
+const os = require('os');
 
 class MT166 {
     constructor(options) {
         let default_options = {
             port: 2,
-            path: './bin/MT166.exe'
+            path: (os.type() === 'Linux')? './bin/MT166': (os.type() === 'Windows_NT')? './bin/MT166.exe':'./bin/MT166.exe',
         }
 
         this.OP_CODES = {
