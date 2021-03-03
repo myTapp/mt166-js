@@ -79,8 +79,8 @@ void send_to_read_position()
     usleep(1000000);
 #endif
     answer = RS232_PollComport(SERIAL_PORT, buffer, 10);
-    printf("answer %d", answer);
-    printf("answer %d", buffer[0]);
+    // printf("answer %d", answer);
+    // printf("answer %d", buffer[0]);
     if (answer > 0 && buffer[0] != RETURN_NAK)
     {
         sprintf(str2, "0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x", buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6]);
