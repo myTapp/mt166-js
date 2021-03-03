@@ -63,3 +63,6 @@ typings/
 
 # VSCode config file
 /.vscode
+
+# others
+log.txt
